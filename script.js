@@ -4,17 +4,30 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbxv3gLNambRm_1GaJUiKP
 
 // Load timetable data from Google Sheet
 async function loadTimetable() {
-  const res = await fetch(SHEET_URL);
-  return await res.json();
+  try {
+    const res = await fetch(SHEET_URL);
+    return await res.json();
+  } catch (error) {
+    console.error("Failed to load data:", error);
+    alert("Failed to load data from Google Sheet.");
+    return [];
+  }
 }
 
 // Save new entry to Google Sheet
 async function saveToSheet(entry) {
-  await fetch(SHEET_URL, {
-    method: "POST",
-    body: JSON.stringify(entry),
-    headers: { "Content-Type": "application/json" }
-  });
+  try {
+    const res = await fetch(SHEET_URL, {
+      method: "POST",
+      body: JSON.stringify(entry),
+      headers: { "Content-Type": "application/json" }
+    });
+    const text = await res.text();
+    console.log("Save result:", text);
+  } catch (error) {
+    console.error("Failed to save entry:", error);
+    alert("Error saving to Google Sheet. Check your script CORS settings.");
+  }
 }
 
 // Teacher Table
