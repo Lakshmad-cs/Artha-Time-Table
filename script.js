@@ -2,12 +2,21 @@ let editIndex = -1;
 const password = "ArthaEDU";
 
 // Storage functions
-function loadTimetable() {
-  return JSON.parse(localStorage.getItem("timetable")) || [];
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxEOxbtcMg3EZ7HuVLr-qrdf33uU44Hfi90ZuBRJfqVHxkkZmeOtToxV8hcGJO8_Ign/exec"; // 🔁 Replace this with your actual Google Apps Script Web App URL
+
+async function loadTimetable() {
+  const res = await fetch(SHEET_URL);
+  return await res.json();
 }
-function saveTimetable(data) {
-  localStorage.setItem("timetable", JSON.stringify(data));
+
+async function saveToSheet(entry) {
+  await fetch(SHEET_URL, {
+    method: "POST",
+    body: JSON.stringify(entry),
+    headers: { "Content-Type": "application/json" }
+  });
 }
+
 
 // Teacher Table
 function renderTeacherTable() {
