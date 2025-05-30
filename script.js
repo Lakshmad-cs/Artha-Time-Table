@@ -1,15 +1,15 @@
 let editIndex = -1;
 const password = "ArthaEDU";
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwZOmelQC1AyT4hh-lpYOESQ6fCrAxfJIYEN8iHvbFzhn09P_-ClbO1BGFy3YKuyUWJ/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwQ2JUlWaPuJMCE3zDuP5TuUvuzWPWhIPuP4Co69990oFmrlSQ_YH0-Q-p4KTE4fH44/exec";
 
 // Load timetable data from Google Sheet
 async function loadTimetable() {
   try {
     const res = await fetch(SHEET_URL);
-    const data = await res.json();
-    return data;
+    if (!res.ok) throw new Error("Network response was not ok");
+    return await res.json();
   } catch (error) {
-    console.error("Failed to load data from Google Sheet:", error);
+    console.error("Failed to load timetable:", error);
     alert("❌ Failed to load data. Check your Google Script URL or Internet.");
     return [];
   }
@@ -18,18 +18,20 @@ async function loadTimetable() {
 // Save new entry to Google Sheet
 async function saveToSheet(entry) {
   try {
-    const response = await fetch(SHEET_URL, {
+    const res = await fetch(SHEET_URL, {
       method: "POST",
       body: JSON.stringify(entry),
       headers: {
         "Content-Type": "application/json"
       }
     });
-    const result = await response.json();
-    console.log("✅ Saved:", result);
+
+    const data = await res.json();
+    if (data.result !== "Success") throw new Error("Submission failed");
+
   } catch (error) {
-    console.error("❌ Error saving to Google Sheet:", error);
-    alert("❌ Error saving to Google Sheet. Check your Script CORS settings.");
+    console.error("Failed to save to sheet:", error);
+    alert("❌ Error saving to Google Sheet. Please check CORS settings and script.");
   }
 }
 
@@ -51,7 +53,7 @@ async function renderTeacherTable() {
   });
 }
 
-// Student Table with filters
+// Student Table
 async function renderStudentTable() {
   const data = await loadTimetable();
   const grade = document.getElementById("filterGrade").value.toLowerCase();
@@ -76,18 +78,18 @@ async function renderStudentTable() {
   });
 }
 
-// Form Submit for teacher input
+// Form Submit
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("timetableForm");
   if (form) {
     form.addEventListener("submit", async e => {
       e.preventDefault();
       const entry = {
-        Teacher: form.teacher.value.trim(),
-        Grade: form.grade.value.trim(),
-        Subject: form.subject.value.trim(),
-        Day: form.day.value.trim(),
-        Time: form.time.value.trim()
+        Teacher: form.teacher.value,
+        Grade: form.grade.value,
+        Subject: form.subject.value,
+        Day: form.day.value,
+        Time: form.time.value
       };
 
       if (editIndex > -1) {
@@ -102,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// View control for student/teacher access
+// View control
 function showTeacherLogin() {
   document.getElementById("viewSelector").classList.add("hidden");
   document.getElementById("passwordPrompt").classList.remove("hidden");
@@ -114,7 +116,7 @@ async function verifyPassword() {
     document.getElementById("passwordPrompt").classList.add("hidden");
     await showView("teacher");
   } else {
-    alert("❌ Incorrect password!");
+    alert("Incorrect password!");
   }
 }
 
