@@ -6,10 +6,11 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbwZOmelQC1AyT4hh-lpYO
 async function loadTimetable() {
   try {
     const res = await fetch(SHEET_URL);
-    return await res.json();
+    const data = await res.json();
+    return data;
   } catch (error) {
-    console.error("Failed to load data:", error);
-    alert("Failed to load data from Google Sheet.");
+    console.error("Failed to load data from Google Sheet:", error);
+    alert("❌ Failed to load data. Check your Google Script URL or Internet.");
     return [];
   }
 }
@@ -17,16 +18,18 @@ async function loadTimetable() {
 // Save new entry to Google Sheet
 async function saveToSheet(entry) {
   try {
-    const res = await fetch(SHEET_URL, {
+    const response = await fetch(SHEET_URL, {
       method: "POST",
       body: JSON.stringify(entry),
-      headers: { "Content-Type": "application/json" }
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
-    const text = await res.text();
-    console.log("Save result:", text);
+    const result = await response.json();
+    console.log("✅ Saved:", result);
   } catch (error) {
-    console.error("Failed to save entry:", error);
-    alert("Error saving to Google Sheet. Check your script CORS settings.");
+    console.error("❌ Error saving to Google Sheet:", error);
+    alert("❌ Error saving to Google Sheet. Check your Script CORS settings.");
   }
 }
 
@@ -48,7 +51,7 @@ async function renderTeacherTable() {
   });
 }
 
-// Student Table
+// Student Table with filters
 async function renderStudentTable() {
   const data = await loadTimetable();
   const grade = document.getElementById("filterGrade").value.toLowerCase();
@@ -73,18 +76,18 @@ async function renderStudentTable() {
   });
 }
 
-// Form Submit
+// Form Submit for teacher input
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("timetableForm");
   if (form) {
     form.addEventListener("submit", async e => {
       e.preventDefault();
       const entry = {
-        Teacher: form.teacher.value,
-        Grade: form.grade.value,
-        Subject: form.subject.value,
-        Day: form.day.value,
-        Time: form.time.value
+        Teacher: form.teacher.value.trim(),
+        Grade: form.grade.value.trim(),
+        Subject: form.subject.value.trim(),
+        Day: form.day.value.trim(),
+        Time: form.time.value.trim()
       };
 
       if (editIndex > -1) {
@@ -99,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// View control
+// View control for student/teacher access
 function showTeacherLogin() {
   document.getElementById("viewSelector").classList.add("hidden");
   document.getElementById("passwordPrompt").classList.remove("hidden");
@@ -111,7 +114,7 @@ async function verifyPassword() {
     document.getElementById("passwordPrompt").classList.add("hidden");
     await showView("teacher");
   } else {
-    alert("Incorrect password!");
+    alert("❌ Incorrect password!");
   }
 }
 
