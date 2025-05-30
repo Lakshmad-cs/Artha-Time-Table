@@ -1,6 +1,6 @@
 let editIndex = -1;
 const password = "ArthaEDU";
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxv3gLNambRm_1GaJUiKP8vSQrLzD9GULG-51864CSdXhAV1thQgssFGnwPZvoe2IDj/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycby0U8wLDNojZ1jEc9Y0XBIaLt1KHKJ9cRXi_vyNh-LXQ_Qkcu8Wo9kSML3eEMgxMHd6/exec";
 
 // Load timetable data from Google Sheet
 async function loadTimetable() {
