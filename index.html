@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Class Timetable</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <h1>📅 Class Timetable</h1>
+
+    <div id="viewSelector">
+      <button onclick="showTeacherLogin()">👨‍🏫 Teacher View</button>
+      <button onclick="showView('student')">🎓 Student View</button>
+    </div>
+
+    <!-- Password prompt -->
+    <div id="passwordPrompt" class="hidden">
+      <input type="password" id="passwordInput" placeholder="Enter Teacher Password" />
+      <button onclick="verifyPassword()">Submit</button>
+    </div>
+
+    <!-- Teacher View -->
+    <div id="teacherView" class="hidden">
+      <h2>👨‍🏫 Teacher Timetable Entry</h2>
+      <form id="timetableForm">
+        <input type="text" id="teacher" placeholder="Teacher Name" required />
+        <input type="text" id="grade" placeholder="Grade" required />
+        <input type="text" id="subject" placeholder="Subject" required />
+        <select id="day" required>
+ 	<option value="" disabled selected>Select Day</option>
+  	<option>Monday</option>
+  	<option>Tuesday</option>
+  	<option>Wednesday</option>
+  	<option>Thursday</option>
+  	<option>Friday</option>
+  	<option>Saturday</option>
+  	<option>Sunday</option>
+</select>
+
+
+        <input type="text" id="time" placeholder="Time (e.g. 9:00 - 10:00)" required />
+        <button type="submit">Add / Update</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Teacher</th><th>Grade</th><th>Subject</th><th>Day</th><th>Time</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="teacherTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Student View -->
+    <div id="studentView" class="hidden">
+      <h2>🎓 Student Timetable</h2>
+      <div class="filters">
+        <input type="text" id="filterGrade" placeholder="Filter by Grade" />
+        <input type="text" id="filterDay" placeholder="Filter by Day" />
+        <input type="text" id="filterSubject" placeholder="Filter by Subject" />
+        <button onclick="renderStudentTable()">Apply Filter</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Teacher</th><th>Grade</th><th>Subject</th><th>Day</th><th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

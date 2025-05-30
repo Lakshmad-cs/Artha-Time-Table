@@ -1,0 +1,85 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to right, #dbeafe, #e0f2fe);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  max-width: 900px;
+  width: 100%;
+  padding: 30px;
+}
+
+h1, h2 {
+  text-align: center;
+  color: #0f172a;
+}
+
+form, .filters, #passwordPrompt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+input, button {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background-color: #e0f2fe;
+}
+
+.hidden {
+  display: none;
+}
+
+#viewSelector {
+  text-align: center;
+  margin-bottom: 20px;
+}
+#viewSelector button {
+  margin: 10px;
+  padding: 12px 24px;
+}
+
+input, select, button {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
