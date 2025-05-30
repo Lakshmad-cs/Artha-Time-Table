@@ -96,14 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
         day: form.day.value,
         time: form.time.value
       };
-      const data = loadTimetable();
       if (editIndex > -1) {
-        data[editIndex] = entry;
-        editIndex = -1;
-      } else {
-        data.push(entry);
-      }
-      saveTimetable(data);
+  alert("Editing existing entries is not supported with Google Sheets backend.");
+  return;
+}
+await saveToSheet(entry);
+
       form.reset();
       renderTeacherTable();
     });
