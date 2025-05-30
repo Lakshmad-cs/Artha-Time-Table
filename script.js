@@ -20,7 +20,7 @@ async function saveToSheet(entry) {
 
 // Teacher Table
 function renderTeacherTable() {
-  const data = loadTimetable();
+ const data = await loadTimetable();
   const tbody = document.getElementById("teacherTableBody");
   tbody.innerHTML = "";
   data.forEach((entry, i) => {
@@ -41,7 +41,7 @@ function renderTeacherTable() {
 
 // Student Table
 function renderStudentTable() {
-  const data = loadTimetable();
+  const data = await loadTimetable();
   const grade = document.getElementById("filterGrade").value.toLowerCase();
   const day = document.getElementById("filterDay").value.toLowerCase();
   const subject = document.getElementById("filterSubject").value.toLowerCase();
