@@ -1,14 +1,14 @@
 let editIndex = -1;
 const password = "ArthaEDU";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxEOxbtcMg3EZ7HuVLr-qrdf33uU44Hfi90ZuBRJfqVHxkkZmeOtToxV8hcGJO8_Ign/exec";
 
-// Storage functions
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxEOxbtcMg3EZ7HuVLr-qrdf33uU44Hfi90ZuBRJfqVHxkkZmeOtToxV8hcGJO8_Ign/exec"; // 🔁 Replace this with your actual Google Apps Script Web App URL
-
+// Load timetable data from Google Sheet
 async function loadTimetable() {
   const res = await fetch(SHEET_URL);
   return await res.json();
 }
 
+// Save new entry to Google Sheet
 async function saveToSheet(entry) {
   await fetch(SHEET_URL, {
     method: "POST",
@@ -17,30 +17,26 @@ async function saveToSheet(entry) {
   });
 }
 
-
 // Teacher Table
-function renderTeacherTable() {
- const data = await loadTimetable();
+async function renderTeacherTable() {
+  const data = await loadTimetable();
   const tbody = document.getElementById("teacherTableBody");
   tbody.innerHTML = "";
   data.forEach((entry, i) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${entry.teacher}</td>
-      <td>${entry.grade}</td>
-      <td>${entry.subject}</td>
-      <td>${entry.day}</td>
-      <td>${entry.time}</td>
-      <td>
-        <button onclick="editEntry(${i})">Edit</button>
-        <button onclick="deleteEntry(${i})">Delete</button>
-      </td>`;
+      <td>${entry.Teacher}</td>
+      <td>${entry.Grade}</td>
+      <td>${entry.Subject}</td>
+      <td>${entry.Day}</td>
+      <td>${entry.Time}</td>
+      <td><i style="color:gray;">Not editable</i></td>`;
     tbody.appendChild(row);
   });
 }
 
 // Student Table
-function renderStudentTable() {
+async function renderStudentTable() {
   const data = await loadTimetable();
   const grade = document.getElementById("filterGrade").value.toLowerCase();
   const day = document.getElementById("filterDay").value.toLowerCase();
@@ -49,59 +45,41 @@ function renderStudentTable() {
   tbody.innerHTML = "";
 
   data.filter(e =>
-    e.grade.toLowerCase().includes(grade) &&
-    e.day.toLowerCase().includes(day) &&
-    e.subject.toLowerCase().includes(subject)
+    e.Grade.toLowerCase().includes(grade) &&
+    e.Day.toLowerCase().includes(day) &&
+    e.Subject.toLowerCase().includes(subject)
   ).forEach(entry => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${entry.teacher}</td>
-      <td>${entry.grade}</td>
-      <td>${entry.subject}</td>
-      <td>${entry.day}</td>
-      <td>${entry.time}</td>`;
+      <td>${entry.Teacher}</td>
+      <td>${entry.Grade}</td>
+      <td>${entry.Subject}</td>
+      <td>${entry.Day}</td>
+      <td>${entry.Time}</td>`;
     tbody.appendChild(row);
   });
-}
-
-// Edit/Delete
-function editEntry(index) {
-  const entry = loadTimetable()[index];
-  document.getElementById("teacher").value = entry.teacher;
-  document.getElementById("grade").value = entry.grade;
-  document.getElementById("subject").value = entry.subject;
-  document.getElementById("day").value = entry.day;
-  document.getElementById("time").value = entry.time;
-  editIndex = index;
-}
-function deleteEntry(index) {
-  const data = loadTimetable();
-  if (confirm("Are you sure?")) {
-    data.splice(index, 1);
-    saveTimetable(data);
-    renderTeacherTable();
-  }
 }
 
 // Form Submit
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("timetableForm");
   if (form) {
-    form.addEventListener("submit", e => {
+    form.addEventListener("submit", async e => {
       e.preventDefault();
       const entry = {
-        teacher: form.teacher.value,
-        grade: form.grade.value,
-        subject: form.subject.value,
-        day: form.day.value,
-        time: form.time.value
+        Teacher: form.teacher.value,
+        Grade: form.grade.value,
+        Subject: form.subject.value,
+        Day: form.day.value,
+        Time: form.time.value
       };
-      if (editIndex > -1) {
-  alert("Editing existing entries is not supported with Google Sheets backend.");
-  return;
-}
-await saveToSheet(entry);
 
+      if (editIndex > -1) {
+        alert("Editing existing entries is not supported in this version.");
+        return;
+      }
+
+      await saveToSheet(entry);
       form.reset();
       renderTeacherTable();
     });
@@ -114,25 +92,25 @@ function showTeacherLogin() {
   document.getElementById("passwordPrompt").classList.remove("hidden");
 }
 
-function verifyPassword() {
+async function verifyPassword() {
   const input = document.getElementById("passwordInput").value;
   if (input === password) {
     document.getElementById("passwordPrompt").classList.add("hidden");
-    showView("teacher");
+    await showView("teacher");
   } else {
     alert("Incorrect password!");
   }
 }
 
-function showView(view) {
+async function showView(view) {
   document.getElementById("teacherView").classList.add("hidden");
   document.getElementById("studentView").classList.add("hidden");
 
   if (view === "teacher") {
     document.getElementById("teacherView").classList.remove("hidden");
-    renderTeacherTable();
+    await renderTeacherTable();
   } else {
     document.getElementById("studentView").classList.remove("hidden");
-    renderStudentTable();
+    await renderStudentTable();
   }
 }
