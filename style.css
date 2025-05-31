@@ -255,26 +255,42 @@ tr:last-child td {
     
     tr {
       border: 1px solid #e2e8f0;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      padding: 0;
       background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
     td {
       border: none;
+      border-bottom: 1px solid #f1f5f9;
       position: relative;
-      padding: 8px 0 8px 30%;
+      padding: 12px 15px;
       text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    td:last-child {
+      border-bottom: none;
     }
     
     td:before {
-      content: attr(data-label) ": ";
-      position: absolute;
-      left: 6px;
-      width: 25%;
+      content: attr(data-label);
       font-weight: 600;
       color: #4a5568;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      margin-right: 15px;
+    }
+    
+    td:after {
+      content: "";
+      flex-grow: 1;
     }
   }
 }
