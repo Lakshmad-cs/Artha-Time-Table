@@ -6,6 +6,25 @@
   <title>Class Timetable</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+<!-- 🔒 Hidden Google Form for Saving Timetable Data -->
+<form id="hiddenForm" 
+      action="https://docs.google.com/forms/d/e/1FAIpQLSdz62A6Z5V6pcGcP8PgsndJBKo_wsxYeaKVmy2Xxv5RJ4DCLw/formResponse" 
+      method="POST" 
+      target="hidden_iframe" 
+      style="display: none;">
+      
+  <input name="entry.1062261703" id="formTeacher" value="">
+  <input name="entry.1127771264" id="formGrade" value="">
+  <input name="entry.1493465584" id="formSubject" value="">
+  <input name="entry.1080077061" id="formDay" value="">
+  <input name="entry.740662876" id="formTime" value="">
+
+  <input type="submit" value="Submit">
+</form>
+
+<!-- 🔒 Invisible iframe to avoid redirecting the page -->
+<iframe name="hidden_iframe" style="display: none;"></iframe>
+
 <body>
   <div class="card">
     <h1>📅 Class Timetable</h1>
