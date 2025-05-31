@@ -61,10 +61,11 @@ async function renderStudentTable() {
   tbody.innerHTML = "";
 
   const filtered = data.filter(e => {
-    return (!grade || e.Grade.toLowerCase().includes(grade)) &&
-           (!day || e.Day.toLowerCase().includes(day)) &&
-           (!subject || e.Subject.toLowerCase().includes(subject));
-  });
+  return (!grade || String(e.Grade).toLowerCase().includes(grade)) &&
+         (!day || String(e.Day).toLowerCase().includes(day)) &&
+         (!subject || String(e.Subject).toLowerCase().includes(subject));
+});
+
 
   filtered.forEach(entry => {
     const row = document.createElement("tr");
