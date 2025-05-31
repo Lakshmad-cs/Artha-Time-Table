@@ -62,11 +62,13 @@ async function renderStudentTable() {
   const tbody = document.getElementById("studentTableBody");
   tbody.innerHTML = "";
 
-  data.filter(e =>
-    e.Grade.toLowerCase().includes(grade) &&
-    e.Day.toLowerCase().includes(day) &&
-    e.Subject.toLowerCase().includes(subject)
-  ).forEach(entry => {
+  const filtered = data.filter(e => {
+    return (!grade || e.Grade.toLowerCase().includes(grade)) &&
+           (!day || e.Day.toLowerCase().includes(day)) &&
+           (!subject || e.Subject.toLowerCase().includes(subject));
+  });
+
+  filtered.forEach(entry => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${entry.Teacher}</td>
@@ -76,7 +78,14 @@ async function renderStudentTable() {
       <td>${entry.Time}</td>`;
     tbody.appendChild(row);
   });
+
+  if (filtered.length === 0) {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td colspan="5" style="text-align:center;">No data found</td>`;
+    tbody.appendChild(row);
+  }
 }
+
 
 // Form Submit
 document.addEventListener("DOMContentLoaded", () => {
