@@ -18,22 +18,22 @@ async function loadTimetable() {
 // Save new entry to Google Sheet
 async function saveToSheet(entry) {
   try {
-    const res = await fetch(SHEET_URL, {
+    await fetch(SHEET_URL, {
       method: "POST",
+      mode: "no-cors", // This avoids CORS error
       body: JSON.stringify(entry),
       headers: {
         "Content-Type": "application/json"
       }
     });
 
-    const data = await res.json();
-    if (data.result !== "Success") throw new Error("Submission failed");
-
+    alert("✅ Data sent to sheet (but response can't be checked due to browser security)");
   } catch (error) {
-    console.error("Failed to save to sheet:", error);
-    alert("❌ Error saving to Google Sheet. Please check CORS settings and script.");
+    console.error("❌ Failed to send data:", error);
+    alert("❌ Error sending to Google Sheet.");
   }
 }
+
 
 // Teacher Table
 async function renderTeacherTable() {
