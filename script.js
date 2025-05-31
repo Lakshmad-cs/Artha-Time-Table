@@ -2,7 +2,7 @@ let editIndex = -1;
 const password = "ArthaEDU";
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxyX7eI3V-iWs1TgL80pTW2kPKKXKLSVzvSTk7KcpHYaU5BWQmnONUA2WZdF3pd_hpFQQ/exec";
 
-// Load timetable data from Google Sheet (read-only)
+// Load timetable data from Google Sheet
 async function loadTimetable() {
   try {
     const res = await fetch(SHEET_URL);
@@ -15,19 +15,25 @@ async function loadTimetable() {
   }
 }
 
-// Submit entry to Google Form using hidden form
-function sendToGoogleForm(entry) {
-  document.getElementById("formTeacher").value = entry.Teacher;
-  document.getElementById("formGrade").value = entry.Grade;
-  document.getElementById("formSubject").value = entry.Subject;
-  document.getElementById("formDay").value = entry.Day;
-  document.getElementById("formTime").value = entry.Time;
-
-  document.getElementById("hiddenForm").submit();
-  alert("✅ Data submitted to Google Form");
+// Save new entry to Google Sheet
+async function saveToSheet(entry) {
+  try {
+    await fetch(SHEET_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(entry),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    alert("✅ Data sent to sheet (but response can't be checked due to browser security)");
+  } catch (error) {
+    console.error("❌ Failed to send data:", error);
+    alert("❌ Error sending to Google Sheet.");
+  }
 }
 
-// Render Teacher Table
+// Teacher Table
 async function renderTeacherTable() {
   const data = await loadTimetable();
   const tbody = document.getElementById("teacherTableBody");
@@ -45,7 +51,7 @@ async function renderTeacherTable() {
   });
 }
 
-// Render Student Table with Filters
+// Student Table
 async function renderStudentTable() {
   const data = await loadTimetable();
   const grade = document.getElementById("filterGrade").value.toLowerCase();
@@ -97,9 +103,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      sendToGoogleForm(entry);
+      await saveToSheet(entry);
       form.reset();
-      renderTeacherTable();
+      await renderTeacherTable(); // update teacher view instantly
+      // Also update student view if visible
+      if (!document.getElementById("studentView").classList.contains("hidden")) {
+        await renderStudentTable();
+      }
     });
   }
 });
